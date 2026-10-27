@@ -1,0 +1,24 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <!-- A second photograph gives the icon a recognisable batch-download silhouette. -->
+    <path android:fillColor="#78CFC6"
+        android:pathData="M31,32 L64,26 C67.4,25.4 70,27.7 70.6,31 L77,67 C77.5,70.3 75.6,72.9 72.3,73.5 L39,79 C35.7,79.6 33.1,77.5 32.5,74.2 L26.4,38.8 C25.8,35.5 27.8,32.6 31,32 Z" />
+    <path android:fillColor="#F8FCFA"
+        android:pathData="M39,24 H72 C75.3,24 78,26.7 78,30 V68 C78,71.3 75.3,74 72,74 H39 C35.7,74 33,71.3 33,68 V30 C33,26.7 35.7,24 39,24 Z" />
+    <path android:fillColor="#A9DDD7"
+        android:pathData="M40,30 H71 C72.1,30 73,30.9 73,32 V52 C73,53.1 72.1,54 71,54 H40 C38.9,54 38,53.1 38,52 V32 C38,30.9 38.9,30 40,30 Z" />
+    <path android:fillColor="#278995"
+        android:pathData="M38,50 L47,40 L53,46 L59,38 L73,52 L73,52 C73,53.1 72.1,54 71,54 H40 C38.9,54 38,53.1 38,52 Z" />
+    <path android:fillColor="#F8FCFA"
+        android:pathData="M66,34 C67.7,34 69,35.3 69,37 C69,38.7 67.7,40 66,40 C64.3,40 63,38.7 63,37 C63,35.3 64.3,34 66,34 Z" />
+    <path android:fillColor="#C8E4E0"
+        android:pathData="M39,59 H50 C51.1,59 52,59.9 52,61 C52,62.1 51.1,63 50,63 H39 Z M39,66 H48 C49.1,66 50,66.9 50,68 H39 Z" />
+    <!-- White border keeps the download badge legible on both photo and background. -->
+    <path android:fillColor="#F8FCFA"
+        android:pathData="M69,54 C77.3,54 84,60.7 84,69 C84,77.3 77.3,84 69,84 C60.7,84 54,77.3 54,69 C54,60.7 60.7,54 69,54 Z" />
+    <path android:fillColor="#0B5263"
+        android:pathData="M69,57 C75.6,57 81,62.4 81,69 C81,75.6 75.6,81 69,81 C62.4,81 57,75.6 57,69 C57,62.4 62.4,57 69,57 Z" />
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M67,61 H71 V70 L74.2,66.8 L77,69.6 L69,77.6 L61,69.6 L63.8,66.8 L67,70 Z" />
+</vector>

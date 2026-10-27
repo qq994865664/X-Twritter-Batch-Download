@@ -3,7 +3,11 @@ package com.xbatch.download
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.RippleDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Build
@@ -19,6 +23,17 @@ import java.time.Instant
 
 /** A visible, anonymous WebView; scrolling follows the website's normal loading behavior. */
 class ScrollScanActivity : Activity() {
+    private val backgroundColor = Color.rgb(247, 248, 246)
+    private val inkColor = Color.rgb(19, 42, 58)
+    private val secondaryColor = Color.rgb(96, 117, 128)
+    private val accentColor = Color.rgb(17, 125, 136)
+    private val borderColor = Color.rgb(229, 238, 236)
+    private fun dp(value: Int): Int = (value * resources.displayMetrics.density + .5f).toInt()
+    private fun rounded(color: Int, radius: Int, border: Int? = null) = GradientDrawable().apply {
+        setColor(color)
+        cornerRadius = dp(radius).toFloat()
+        if (border != null) setStroke(dp(1), border)
+    }
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var browser: WebView
     private lateinit var label: TextView
@@ -46,19 +61,67 @@ class ScrollScanActivity : Activity() {
         if (Build.VERSION.SDK_INT >= 33) onBackInvokedDispatcher.registerOnBackInvokedCallback(android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT) { complete("手动停止下拉") }
         val name = task.getString("username")
         collector = assets.open("scroll-collector.js").bufferedReader().use { it.readText() }.replace("__USERNAME__", JSONObject.quote(name))
-        val layout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setBackgroundColor(Color.WHITE) }
-        label = TextView(this).apply { text = "正在打开 @$name 的公开主页…"; textSize = 16f; setTextColor(Color.BLACK); setPadding(24, 24, 24, 16) }
-        layout.addView(label)
-        layout.addView(TextView(this).apply { text = "自动向下滚动；请保持此页面打开。不会登录 X。"; setPadding(24, 0, 24, 16); setTextColor(Color.DKGRAY) })
+        val layout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setBackgroundColor(backgroundColor) }
+        val header = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = android.view.Gravity.CENTER_VERTICAL }
+        val back = TextView(this).apply {
+            text = "‹"; textSize = 34f; setTextColor(inkColor); gravity = android.view.Gravity.CENTER
+            contentDescription = "返回并停止查找"
+            setOnClickListener { complete("手动停止下拉") }
+        }
+        header.addView(back, LinearLayout.LayoutParams(dp(48), dp(48)).apply { marginStart = -dp(12) })
+        val heading = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        heading.addView(TextView(this).apply { text = "继续查找"; textSize = 20f; setTextColor(inkColor); setTypeface(null, Typeface.BOLD) })
+        heading.addView(TextView(this).apply { text = "@$name"; textSize = 13f; setTextColor(secondaryColor); setPadding(0, dp(2), 0, 0) })
+        header.addView(heading, LinearLayout.LayoutParams(0, -2, 1f))
+        layout.addView(header, LinearLayout.LayoutParams(-1, -2))
+
+        val statusCard = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            background = rounded(Color.WHITE, 20, borderColor)
+            setPadding(dp(16), dp(14), dp(16), dp(14))
+        }
+        val statusRow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = android.view.Gravity.CENTER_VERTICAL }
+        val spinner = ProgressBar(this, null, android.R.attr.progressBarStyleSmall).apply {
+            isIndeterminate = true
+            indeterminateTintList = ColorStateList.valueOf(accentColor)
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        }
+        statusRow.addView(spinner, LinearLayout.LayoutParams(dp(20), dp(20)).apply { marginEnd = dp(10) })
+        label = TextView(this).apply { text = "正在打开公开主页…"; textSize = 15f; setTextColor(inkColor); setTypeface(null, Typeface.BOLD) }
+        statusRow.addView(label, LinearLayout.LayoutParams(0, -2, 1f))
+        statusCard.addView(statusRow)
+        statusCard.addView(TextView(this).apply {
+            text = "请保持页面打开，结束后会自动下载找到的图片。"
+            textSize = 13f; setTextColor(secondaryColor); setPadding(0, dp(8), 0, 0)
+        })
+        layout.addView(statusCard, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(12) })
+
         browser = WebView(this)
-        layout.addView(browser, LinearLayout.LayoutParams(-1, 0, 1f))
-        layout.addView(Button(this).apply { text = "停止下拉，下载已找到图片"; setOnClickListener { complete("手动停止下拉") } })
+        val webCard = FrameLayout(this).apply {
+            background = rounded(Color.WHITE, 20, borderColor)
+            clipToOutline = true
+            addView(browser, FrameLayout.LayoutParams(-1, -1))
+        }
+        layout.addView(webCard, LinearLayout.LayoutParams(-1, 0, 1f).apply { topMargin = dp(12) })
+        val stop = Button(this).apply {
+            text = "停止查找并下载"; textSize = 16f; setTextColor(Color.WHITE); isAllCaps = false
+            setTypeface(null, Typeface.BOLD)
+            background = RippleDrawable(ColorStateList.valueOf(Color.rgb(75, 165, 172)), rounded(accentColor, 18), null)
+            stateListAnimator = null
+            setOnClickListener { complete("手动停止下拉") }
+        }
+        layout.addView(stop, LinearLayout.LayoutParams(-1, dp(52)).apply { topMargin = dp(12) })
         setContentView(layout)
         @Suppress("DEPRECATION")
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+        @Suppress("DEPRECATION")
+        window.statusBarColor = backgroundColor
+        @Suppress("DEPRECATION")
+        window.navigationBarColor = backgroundColor
         layout.setOnApplyWindowInsetsListener { view, insets ->
             @Suppress("DEPRECATION")
-            view.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop, insets.systemWindowInsetRight, insets.systemWindowInsetBottom)
+            view.setPadding(insets.systemWindowInsetLeft + dp(16), insets.systemWindowInsetTop + dp(8),
+                insets.systemWindowInsetRight + dp(16), insets.systemWindowInsetBottom + dp(12))
             insets
         }
         browser.settings.apply {
@@ -138,7 +201,7 @@ class ScrollScanActivity : Activity() {
                 lastPending = result.optInt("pending")
                 idle = if (before == seenPosts.size && newImages == 0 && lastPending == 0) idle + 1 else 0
                 rounds++
-                label.text = "自动下拉第 $rounds 轮 · 已见 ${seenPosts.size} 条帖子 · 新增 $added 张图片"
+                label.text = "已查看 ${seenPosts.size} 条帖子 · 新增 $added 张待核验"
                 if (idle >= 6) complete("连续 6 轮未出现新帖子；已到当前匿名页面可加载范围")
                 else handler.postDelayed({ step() }, 2500)
             } catch (_: Exception) { complete("无法识别动态页面内容，已保存找到的图片") }

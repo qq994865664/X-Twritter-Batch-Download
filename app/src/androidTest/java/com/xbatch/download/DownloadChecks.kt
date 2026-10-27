@@ -65,9 +65,9 @@ class DownloadChecks : InstrumentationTestCase() {
         file.outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
         bitmap.recycle()
         val item = JSONObject().put("post_id", "987654321").put("created_at", "2026-10-27T00:00:00Z")
-            .put("media_key", "3_1234567890123456789").put("width", 32).put("height", 24)
+            .put("media_key", "3_2029511190909747200").put("width", 32).put("height", 24)
             .put("non_reply_verified", true)
-            .put("url", "https://pbs.twimg.com/media/ESIQ9H3pgRUSNFY?format=png&name=orig")
+            .put("url", "https://pbs.twimg.com/media/HCpFrOHbAAAVuKe?format=png&name=orig")
         val transfer = Transfer(context) { false }
         val result = transfer.publish("xbatch_check", item, file)
         try {

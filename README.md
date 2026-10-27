@@ -1,14 +1,24 @@
-# X 图片批量下载 0.5.2 · Release 版
+# X 图片批量下载 0.7.0
+
+[下载 0.7.0 安卓安装包](https://github.com/qq994865664/X-Twritter-Batch-Download/releases/download/v0.7.0/XBatchDownload-0.7.0-release.apk)
 
 **安装 APP → 输入用户名 → 一键批量下载 → 保存到 `Download/用户名/`。**
 
-**[下载 Release 0.5.2 APK](https://github.com/qq994865664/X-Twritter-Batch-Download/releases/download/v0.5.2/XBatchDownload-0.5.2-release.apk)**
-
 不需要 X API 凭证、不付 API 费用、不需要部署后端，也不需要登录 X。手机需要能够访问 X、`pbs.twimg.com` 及至少一个公开 RSS 镜像；网络流量仍按你的网络套餐计费。
+
+## 界面更新
+
+- 使用暖白背景和青蓝主色，输入、粘贴及一键下载集中在首页。
+- 下载进度分开展示已发现、已保存和失败数量；暂停、继续和重试按任务状态出现。
+- 下载目录、已有文件夹关联、自动下拉和使用说明集中在「常用功能」，查找记录默认折叠。
+- 新的应用图标以照片和下载箭头呈现，支持 Android 13 及以上的主题图标。
+- 打开应用时自动检查正式版本，也可在「常用功能」中点击「检查更新」。发现新版本后选择「更新」，系统会用默认浏览器打开 APK 下载地址；安装仍由用户在系统中完成。
+
+版本信息来自本项目的 [GitHub Releases](https://github.com/qq994865664/X-Twritter-Batch-Download/releases)，检查时需要能够访问 GitHub，无需登录或申请 API 凭证。只有高于当前版本的正式发布才会提醒；发布时需要附带命名为 `XBatchDownload-版本号-release.apk` 的安装包。
 
 ## 使用
 
-1. 安装上方 Release APK，支持 Android 10 及以上。使用同一开发环境的 0.5.2 调试版已在 Android 15 模拟器上通过隔离覆盖升级测试；其他设备或不同签名的旧版可能无法覆盖。
+1. 安装上方链接下载的 `XBatchDownload-0.7.0-release.apk`，支持 Android 10 及以上。沿用 0.5.2 的发布签名和签名轮换链；其他设备或不同签名的旧版可能无法覆盖。
 2. 输入 `NASA`、`@NASA` 或 `https://x.com/NASA`。用户名是 @ 后面的 handle，不是昵称。
 3. 如果以前下载过图片，特别是重装过 APP 或文件来自其他应用，请点击「关联已有图片文件夹（防重复）」，在系统选择器中选 `Download/用户名/` 并授权读取。以后此账号不必重复选择。
 4. 点击「一键批量下载」。应用自动翻页读取 RSS 历史链接，逐条核对 X 原帖并保存原图。文件管理器中打开 `Download/NASA/` 即可查看。
@@ -45,8 +55,10 @@ RSS 返回空页、重复游标、连续三次重复的同一页或没有游标�
 
 ## 已验证（2026-10-27）
 
-- 25 项 Android 模拟器基本检查通过，覆盖优先镜像顺序、回复识别、历史任务核验、来源切换与去重；APK 构建及 Android Lint 通过。
-- Release 使用独立签名密钥和旧密钥的签名轮换链，在 Android 15 隔离测试包上成功覆盖此前调试签名版本，已有应用偏好设置得以保留。该检查不代表其他 Android 版本和设备均已验证。
+- 0.7.0 的 31 项 Android 模拟器检查通过，包含版本比较、更新链接校验、更新弹窗和浏览器调用；真实 GitHub 版本检测通过，APK 构建及 Android Lint 通过。
+- Android 15 模拟器使用隔离包验证了 0.5.2 调试版 → 0.5.2 Release → 0.7.0 Release 覆盖升级，设置保留；其他设备尚未验证。
+- 0.6.0 的 27 项 Android 模拟器基本检查通过，覆盖优先镜像顺序、回复识别、历史任务核验、来源切换与去重；APK 构建及 Android Lint 通过。
+- 0.6.0 在 Android 模拟器上检查了首页、工具区、任务状态、自动下拉页以及窄屏和 130% 字体显示；其他设备尚未验证。
 - X 页面的结构和公开镜像随时可能变化，无法确认非回复状态时不会下载；图片历史不保证完整。
 
 ## 构建与代码
@@ -64,11 +76,12 @@ sdk.dir=C\:/Android/sdk
 python package_signed_release.py
 ```
 
-Gradle 先输出未签名的 `app/build/outputs/apk/release/app-release-unsigned.apk`；打包脚本会对齐并使用发布签名，最终生成 `dist/XBatchDownload-0.5.2-release.apk`、校验值和源码包。该 APK 非调试构建，使用 Android 9 起支持的签名轮换链，尝试兼容本项目此前用本机调试密钥签名的 APK。
+Gradle 先输出未签名的 `app/build/outputs/apk/release/app-release-unsigned.apk`；打包脚本会对齐并使用发布签名，最终生成 `dist/XBatchDownload-0.7.0-release.apk`、校验值和源码包。该 APK 非调试构建，使用 Android 9 起支持的签名轮换链，尝试兼容本项目此前用本机调试密钥签名的 APK。
 
 本机私有 `.release-signing/` 文件夹内保存发布密钥、密码文件、旧签名密钥备份及签名轮换链；后续发布需使用同一套材料。请自行妥善备份并限制访问，**不要公开或随源码包分发**。源码包不包含密钥或密码。若覆盖安装提示签名不兼容，不要直接卸载旧版；先备份已有图片与应用数据，再检查设备和旧版签名。升级后旧调试 APK 通常不能直接覆盖回装。
 
 - `MainActivity.kt`：输入、一键启动、进度及来源记录。
+- `UpdateChecker.kt`：读取 GitHub 正式版本并校验版本号与 APK 链接。
 - `PublicTimeline.kt`：公开 HTML/JSON 解析、作者和转帖过滤、持久化扫描队列。
 - `PublicRss.kt`：RSS 作者过滤、帖子链接发现、分页 URL 校验。
 - `ScrollScanActivity.kt`、`assets/scroll-collector.js`：匿名网页自动滚动、新帖子收集和停止原因。
@@ -90,7 +103,7 @@ Android 15 及以上可能限制长时间后台运行，停止后打开 APP 继�
 安装 `app-probe.apk` 和 `app-probe-androidTest.apk` 后运行：
 
 ```sh
-adb shell am instrument -w -e class com.xbatch.download.RssChecks,com.xbatch.download.PublicPageChecks,com.xbatch.download.TimelineFallbackChecks,com.xbatch.download.DownloadChecks,com.xbatch.download.ReplyDownloadChecks,com.xbatch.download.ScrollChecks com.xbatch.download.probe.test/android.test.InstrumentationTestRunner
+adb shell am instrument -w -e class com.xbatch.download.MainUiChecks,com.xbatch.download.RssChecks,com.xbatch.download.PublicPageChecks,com.xbatch.download.TimelineFallbackChecks,com.xbatch.download.DownloadChecks,com.xbatch.download.ReplyDownloadChecks,com.xbatch.download.ScrollChecks,com.xbatch.download.UpdateCheckerChecks,com.xbatch.download.UpdateDialogChecks com.xbatch.download.probe.test/android.test.InstrumentationTestRunner
 ```
 
 真实网络检查建议仅在无 NASA 下载任务的测试模拟器中执行，会下载并清理测试图片：
@@ -99,8 +112,8 @@ adb shell am instrument -w -e class com.xbatch.download.RssChecks,com.xbatch.dow
 adb shell am instrument -w -e class com.xbatch.download.LivePublicChecks com.xbatch.download.probe.test/android.test.InstrumentationTestRunner
 ```
 
-解析回归检查使用合成帖子数据，不包含真实账号下载内容。
+`app/src/androidTest/assets/nasa-public-page.html` 是公开页面测试样本，仅进入测试 APK，不进入用户安装包。
 
 ## 旧版文件
 
-`backend/` 和 `dist/backend.zip` 是 0.1.0 的历史实现。**当前 0.5.2 不调用它们，无需部署。** 新版源码包不包含旧后端；旧 APK 保留以便区分版本，请安装名称含 `0.5.2` 的 APK。
+`backend/` 和 `dist/backend.zip` 是 0.1.0 的历史实现。**当前 0.7.0 不调用它们，无需部署。** 新版源码包不包含旧后端；旧 APK 保留以便区分版本，请安装名称含 `0.7.0` 的 APK。

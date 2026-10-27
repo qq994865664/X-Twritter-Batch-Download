@@ -9,8 +9,8 @@ android {
         applicationId = "com.xbatch.download"
         minSdk = 29
         targetSdk = 36
-        versionCode = 8
-        versionName = "0.5.2"
+        versionCode = 10
+        versionName = "0.7.0"
         testInstrumentationRunner = "android.test.InstrumentationTestRunner"
     }
     buildTypes {

@@ -48,14 +48,13 @@ class PublicPageChecks : InstrumentationTestCase() {
     }
 
     fun testCapturedPublicPageStreamingJson() {
-        val data = JSONObject().put("data", JSONObject().put("timeline", JSONArray().put(post("100"))))
-        val source = "<script>stream({value:" + JSONObject.quote(data.toString()) + "});</script>"
-        val page = PublicPageParser.parse(source, "Sample", "https://x.com/Sample")
+        val source = instrumentation.context.assets.open("nasa-public-page.html").bufferedReader().use { it.readText() }
+        val page = PublicPageParser.parse(source, "NASA", "https://x.com/NASA")
         assertTrue(page.recognized)
-        assertEquals(1, page.posts)
-        assertEquals(1, page.items.length())
-        assertEquals("100", page.items.getJSONObject(0).getString("post_id"))
-        assertEquals(100, page.items.getJSONObject(0).getInt("width"))
+        assertEquals(5, page.posts)
+        assertEquals(3, page.items.length())
+        assertEquals("2114801524358406570", page.items.getJSONObject(0).getString("post_id"))
+        assertEquals(2048, page.items.getJSONObject(0).getInt("width"))
     }
 
     fun testLegacyEmbedAndRetweetContext() {
