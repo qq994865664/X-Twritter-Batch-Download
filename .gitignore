@@ -1,0 +1,15 @@
+.gradle/
+.kotlin/
+**/build/
+local.properties
+.venv/
+__pycache__/
+.pytest_cache/
+.env
+*.sqlite3*
+dist/
+*.log
+.release-signing/
+*.keystore
+*.jks
+*.p12

@@ -1,0 +1,4 @@
+<resources>
+    <string name="download_counts">已发现 %1$d 张   ·   已保存 %2$d 张   ·   失败 %3$d 张</string>
+    <string name="download_path">保存到 Download/%1$s/</string>
+</resources>
